@@ -1,10 +1,13 @@
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  // TODO (Day 4-6): replace this with real auth state from AuthContext
-  const isAuthenticated = true; // temporarily always true so routing can be tested today
+  // TEMPORARY (Day 4-6 will make this real): no login exists yet,
+  // so we allow access regardless of auth state for now.
+  const { isAuthenticated } = useAuth();
+  const bypassAuthForNow = true;
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !bypassAuthForNow) {
     return <Navigate to="/login" replace />;
   }
 
