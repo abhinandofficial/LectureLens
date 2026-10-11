@@ -4,7 +4,7 @@
 
 ---
 
- 📖 Overview
+ ## 📖 Overview
 
 LectureLens is an assistive classroom and cognitive recovery platform that bridges the gap between live instruction and individual student memory. It captures live spoken audio and synchronized lecture slides, filters acoustic fillers in real time, diagnoses root misconceptions using the **Mental Mirror** engine, delivers **60-Second Remediation Bites**, tracks forgetting using **Ebbinghaus decay modeling**, and auto-generates personalized **Late Join Catch-Up** summaries and **RecallQ** diagnostic assessments.
 
