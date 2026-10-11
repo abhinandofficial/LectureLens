@@ -312,7 +312,7 @@ export async function generateLateJoinCatchUp(params: {
 
   // Attempt server Gemini call
   try {
-    const res = await fetch('http://localhost:5000/api/late-catchup/generate', {
+    const res = await fetch('/api/late-catchup/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

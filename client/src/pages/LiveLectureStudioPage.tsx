@@ -646,7 +646,7 @@ export const LiveLectureStudioPage: React.FC = () => {
           reader.onloadend = async () => {
             const base64 = reader.result as string;
             try {
-              const res = await fetch('http://localhost:5000/api/transcribe', {
+              const res = await fetch('/api/transcribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

@@ -589,6 +589,18 @@ Respond ONLY with valid JSON matching this schema:
   });
 });
 
+// Centralized error handler to prevent stack traces leaking to clients in production
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('Unhandled server error:', err?.message || err);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'development' ? err?.message : 'An unexpected error occurred',
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`LectureLens server listening on port ${PORT}`);
 });
+
+export default app;
+export { app };

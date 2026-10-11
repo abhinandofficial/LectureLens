@@ -279,7 +279,7 @@ export async function generateRecallQPackageWithGemini(
     .join('\n\n');
 
   try {
-    const res = await fetch('http://localhost:5000/api/recallq/generate', {
+    const res = await fetch('/api/recallq/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
