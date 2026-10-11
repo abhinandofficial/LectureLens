@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  /* Single default base font size of 16.5px (1.03rem) */
+  font-size: 16.5px;
+  scroll-behavior: smooth;
+}
+
 @layer base {
   * {
     border-color: #e4e4e7;
@@ -9,14 +15,30 @@
   body {
     background-color: #ffffff;
     color: #09090b;
+    font-size: 1rem;
+    line-height: 1.55;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  p {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+}
+
+/* Malayalam text styling - 1.8 line-height and slightly larger optical sizing */
+.font-malayalam,
+[lang="ml"],
+.lang-ml {
+  font-family: 'Noto Sans Malayalam', 'Inter', system-ui, -apple-system, sans-serif !important;
+  line-height: 1.8 !important;
+  font-size: 1.06em;
+  letter-spacing: 0.01em;
 }
 
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -42,4 +64,10 @@
 }
 .animate-pulse-subtle {
   animation: pulse-subtle 2.5s infinite ease-in-out;
+}
+
+/* Prevent text clipping in cards */
+.break-words {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }

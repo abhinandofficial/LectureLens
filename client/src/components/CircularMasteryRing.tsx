@@ -12,8 +12,8 @@ interface CircularMasteryRingProps {
 export const CircularMasteryRing: React.FC<CircularMasteryRingProps> = ({
   score,
   status,
-  size = 56,
-  strokeWidth = 5,
+  size = 62,
+  strokeWidth = 5.5,
   showLabel = true,
 }) => {
   const radius = (size - strokeWidth) / 2;
@@ -21,9 +21,8 @@ export const CircularMasteryRing: React.FC<CircularMasteryRingProps> = ({
   const clampedScore = Math.min(100, Math.max(0, score));
   const strokeDashoffset = circumference - (clampedScore / 100) * circumference;
 
-  // Determine color based on status or score
   let strokeColor = '#10b981'; // emerald (mastered)
-  let badgeBg = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+  let badgeBg = 'bg-emerald-50 text-emerald-800 border-emerald-300';
   let label = 'Mastered';
 
   const effectiveStatus: MasteryTier =
@@ -38,21 +37,21 @@ export const CircularMasteryRing: React.FC<CircularMasteryRingProps> = ({
 
   if (effectiveStatus === 'bottleneck') {
     strokeColor = '#ef4444'; // red
-    badgeBg = 'bg-red-50 text-red-700 border-red-200';
+    badgeBg = 'bg-red-50 text-red-800 border-red-300';
     label = 'Bottleneck';
   } else if (effectiveStatus === 'at-risk') {
     strokeColor = '#f97316'; // orange
-    badgeBg = 'bg-orange-50 text-orange-700 border-orange-200';
+    badgeBg = 'bg-orange-50 text-orange-800 border-orange-300';
     label = 'At-Risk';
   } else if (effectiveStatus === 'developing') {
     strokeColor = '#f59e0b'; // amber
-    badgeBg = 'bg-amber-50 text-amber-700 border-amber-200';
+    badgeBg = 'bg-amber-50 text-amber-800 border-amber-300';
     label = 'Developing';
   }
 
   return (
-    <div className="inline-flex items-center gap-2.5">
-      <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+    <div className="inline-flex items-center gap-3">
+      <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="transform -rotate-90">
           {/* Background circle */}
           <circle
@@ -77,12 +76,12 @@ export const CircularMasteryRing: React.FC<CircularMasteryRingProps> = ({
             className="transition-all duration-700 ease-out"
           />
         </svg>
-        <span className="absolute text-[12px] font-bold tracking-tight text-zinc-900">
+        <span className="absolute text-sm font-black tracking-tight text-zinc-900 select-none">
           {clampedScore}%
         </span>
       </div>
       {showLabel && (
-        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${badgeBg}`}>
+        <span className={`text-xs font-bold px-3 py-1 rounded-full border shadow-xs ${badgeBg}`}>
           {label}
         </span>
       )}

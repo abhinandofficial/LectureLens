@@ -1,7 +1,11 @@
 {
-  "name": "lecturelens-monorepo",
+  "name": "lecturelens",
+  "description": "Real-time AI cognitive learning platform with live lecture sync, misconception diagnosis, and personalized remediation.",
   "private": true,
   "scripts": {
+    "dev": "npm run dev:client",
+    "build": "npm run build:client",
+    "preview": "npm --prefix client run preview",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",
     "build:server": "npm --prefix server run build",

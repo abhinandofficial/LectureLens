@@ -129,29 +129,29 @@ export const SyllabusIngestionPage: React.FC = () => {
       {/* Top Banner */}
       <div className="bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-subtle flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 border border-zinc-200 text-xs font-semibold text-zinc-700 mb-2">
-            <UploadCloud className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-200 text-xs font-semibold text-zinc-700 mb-2.5">
+            <UploadCloud className="w-4 h-4 text-emerald-600" />
             <span>Kahn's Topological Sort Validator</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight">
             Syllabus Ingestion & Cycle Prevention
           </h1>
-          <p className="text-xs sm:text-sm text-zinc-500 mt-1 max-w-xl">
+          <p className="text-sm sm:text-base text-zinc-600 mt-2 max-w-2xl leading-relaxed">
             Ingest course outlines with Gemini. Before saving, Kahn's algorithm validates the prerequisite
             DAG to reject cyclic dependencies. Teachers inspect and approve before publishing.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start md:self-auto">
+        <div className="flex items-center gap-2.5 self-start md:self-auto">
           <button
             onClick={() => setInputText(VALID_SAMPLE)}
-            className="text-xs font-semibold px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition-colors"
+            className="text-sm font-semibold px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-800 transition-colors"
           >
             Load Valid Outline
           </button>
           <button
             onClick={handleTestCycle}
-            className="text-xs font-semibold px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 transition-colors"
+            className="text-sm font-semibold px-4 py-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 transition-colors"
           >
             Simulate Cycle Error
           </button>
@@ -159,12 +159,12 @@ export const SyllabusIngestionPage: React.FC = () => {
       </div>
 
       {/* Input Textarea & Action */}
-      <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-subtle space-y-4">
+      <div className="bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-subtle space-y-5">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+          <label className="text-sm font-bold uppercase tracking-wider text-zinc-700">
             Paste Syllabus / Outline / Chapter Text
           </label>
-          <span className="text-xs text-zinc-400">Gemini 2.5 Flash Structured JSON Extraction</span>
+          <span className="text-xs sm:text-sm text-zinc-500 font-medium">Gemini 2.5 Flash Structured JSON Extraction</span>
         </div>
 
         <textarea
@@ -172,19 +172,19 @@ export const SyllabusIngestionPage: React.FC = () => {
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           placeholder="Paste course topics and module prerequisites here..."
-          className="w-full text-xs font-mono p-4 rounded-2xl border border-zinc-200 bg-zinc-50/50 text-zinc-800 focus:outline-none focus:ring-2 focus:ring-dark-900/10 leading-relaxed resize-none"
+          className="w-full text-sm sm:text-base font-mono p-4 sm:p-5 rounded-2xl border border-zinc-200 bg-zinc-50/50 text-zinc-800 focus:outline-none focus:ring-2 focus:ring-dark-900/10 leading-relaxed resize-none"
         />
 
-        <div className="flex items-center justify-between pt-2">
-          <div className="text-xs text-zinc-500 flex items-center gap-2">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+          <div className="text-xs sm:text-sm text-zinc-600 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
             Automatic atomic concept extraction + prerequisite edge resolution
           </div>
 
           <button
             disabled={isProcessing || !inputText.trim()}
             onClick={handleRunIngestion}
-            className="bg-dark-900 hover:bg-black disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-2xl shadow-subtle transition-all flex items-center gap-2"
+            className="bg-dark-900 hover:bg-black disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-sm sm:text-base px-6 py-3.5 rounded-2xl shadow-subtle transition-all flex items-center justify-center gap-2"
           >
             {isProcessing ? 'Running Kahn Engine...' : 'Extract & Run Kahn Cycle Check'}
             <ArrowRight className="w-4 h-4" />
@@ -195,7 +195,7 @@ export const SyllabusIngestionPage: React.FC = () => {
       {/* Kahn Validation Report Bar */}
       {cycleReport && (
         <div
-          className={`p-6 rounded-3xl border shadow-subtle animate-fadeIn ${
+          className={`p-6 sm:p-7 rounded-3xl border shadow-subtle animate-fadeIn ${
             cycleReport.hasCycle
               ? 'bg-red-50 border-red-200 text-red-950'
               : 'bg-emerald-50 border-emerald-200 text-emerald-950'
@@ -204,17 +204,17 @@ export const SyllabusIngestionPage: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-start gap-3">
               {cycleReport.hasCycle ? (
-                <ShieldAlert className="w-6 h-6 text-red-600 shrink-0 mt-0.5" />
+                <ShieldAlert className="w-7 h-7 text-red-600 shrink-0 mt-0.5" />
               ) : (
-                <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-7 h-7 text-emerald-600 shrink-0 mt-0.5" />
               )}
               <div>
-                <h4 className="font-extrabold text-base">
+                <h4 className="font-extrabold text-lg sm:text-xl">
                   {cycleReport.hasCycle
                     ? "Kahn's Topological Sort Rejected: Circular Dependency Detected!"
                     : "Kahn's Topological Sort Verified: Valid Acyclic DAG"}
                 </h4>
-                <p className="text-xs mt-1">
+                <p className="text-sm sm:text-base mt-1.5 leading-relaxed">
                   {cycleReport.hasCycle
                     ? `Offending cycle loop contains nodes: ${cycleReport.cycleNodes.join(' ➔ ')}. In-degrees cannot reach zero.`
                     : `Zero cycles detected. All ${extractedConcepts.length} concepts can be strictly ordered in topological execution sequence.`}
@@ -225,7 +225,7 @@ export const SyllabusIngestionPage: React.FC = () => {
             {cycleReport.hasCycle && (
               <button
                 onClick={handleBreakCycle}
-                className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shrink-0"
+                className="bg-red-600 hover:bg-red-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shrink-0"
               >
                 Auto-Repair: Remove Back-Edge
               </button>
@@ -237,12 +237,12 @@ export const SyllabusIngestionPage: React.FC = () => {
       {/* Extracted Concepts Review & Approval Table */}
       {extractedConcepts.length > 0 && (
         <div className="bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-subtle space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-zinc-100">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-100">
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200 inline-block mb-1">
                 AI-Generated, Pending Review
               </span>
-              <h3 className="text-xl font-extrabold text-zinc-950 mt-1">
+              <h3 className="text-2xl font-extrabold text-zinc-950 mt-1">
                 Extracted Concepts & Edge Dependencies ({extractedConcepts.length})
               </h3>
             </div>
@@ -251,7 +251,7 @@ export const SyllabusIngestionPage: React.FC = () => {
               <button
                 disabled={cycleReport?.hasCycle || isPublished}
                 onClick={handlePublish}
-                className={`inline-flex items-center gap-2 font-bold text-xs sm:text-sm px-6 py-3 rounded-2xl shadow-subtle transition-all ${
+                className={`inline-flex items-center gap-2 font-bold text-sm sm:text-base px-6 py-3.5 rounded-2xl shadow-subtle transition-all ${
                   isPublished
                     ? 'bg-emerald-600 text-white cursor-default'
                     : cycleReport?.hasCycle
@@ -261,13 +261,13 @@ export const SyllabusIngestionPage: React.FC = () => {
               >
                 {isPublished ? (
                   <>
-                    <Check className="w-4 h-4" />
+                    <Check className="w-5 h-5" />
                     <span>Published to Course Graph!</span>
                   </>
                 ) : (
                   <>
                     <span>Approve & Publish to DAG</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-5 h-5" />
                   </>
                 )}
               </button>
@@ -275,27 +275,29 @@ export const SyllabusIngestionPage: React.FC = () => {
           </div>
 
           {/* Concepts Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {extractedConcepts.map((concept, idx) => (
               <div
                 key={concept.id}
-                className="p-4 rounded-2xl border border-zinc-200 hover:border-zinc-300 transition-all bg-white"
+                className="p-5 rounded-2xl border border-zinc-200 hover:border-zinc-300 transition-all bg-white flex flex-col justify-between"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
-                    Tier {concept.tier}
-                  </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                    Pending Review
-                  </span>
+                <div>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+                      Tier {concept.tier}
+                    </span>
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                      Pending Review
+                    </span>
+                  </div>
+                  <h4 className="font-extrabold text-lg text-zinc-900 mb-1.5">{concept.name}</h4>
+                  <p className="text-sm sm:text-base text-zinc-600 leading-relaxed mb-4">
+                    {concept.description}
+                  </p>
                 </div>
-                <h4 className="font-bold text-sm text-zinc-900 mb-1">{concept.name}</h4>
-                <p className="text-xs text-zinc-500 leading-relaxed mb-3">
-                  {concept.description}
-                </p>
 
-                <div className="pt-2 border-t border-zinc-100 flex items-center justify-between text-xs">
-                  <label className="flex items-center gap-2 cursor-pointer text-zinc-600">
+                <div className="pt-3 border-t border-zinc-100 flex items-center justify-between text-sm">
+                  <label className="flex items-center gap-2.5 cursor-pointer text-zinc-700">
                     <input
                       type="checkbox"
                       checked={concept.isBottleneck}
@@ -304,9 +306,9 @@ export const SyllabusIngestionPage: React.FC = () => {
                         updated[idx].isBottleneck = e.target.checked;
                         setExtractedConcepts(updated);
                       }}
-                      className="accent-dark-900 rounded"
+                      className="accent-dark-900 w-4 h-4 rounded"
                     />
-                    <span className="text-[11px] font-semibold">Flag as Potential Bottleneck</span>
+                    <span className="text-xs sm:text-sm font-semibold">Flag as Potential Bottleneck</span>
                   </label>
                 </div>
               </div>

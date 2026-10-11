@@ -7,7 +7,22 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'Noto Sans Malayalam', 'system-ui', '-apple-system', 'sans-serif'],
+        malayalam: ['Noto Sans Malayalam', 'sans-serif'],
+      },
+      fontSize: {
+        // Rem-based scale anchored to 16.5px base (= 1rem)
+        // Secondary text at least 13px (0.8125rem = 13.4px)
+        'xs': ['0.8125rem', { lineHeight: '1.5' }],    // ~13.4px (Captions, secondary text)
+        'sm': ['0.8875rem', { lineHeight: '1.5' }],    // ~14.65px (Badges, labels, compact items)
+        'base': ['1rem', { lineHeight: '1.55' }],      // 16.5px (Body, paragraphs)
+        'lg': ['1.125rem', { lineHeight: '1.55' }],    // ~18.56px (Large body, stems)
+        'xl': ['1.25rem', { lineHeight: '1.5' }],      // ~20.6px
+        '2xl': ['1.5rem', { lineHeight: '1.4' }],      // ~24.75px
+        '3xl': ['1.875rem', { lineHeight: '1.3' }],    // ~30.9px (Section headings)
+        '4xl': ['2.25rem', { lineHeight: '1.25' }],    // ~37.1px (Page titles)
+        '5xl': ['2.75rem', { lineHeight: '1.2' }],     // ~45.4px
+        '6xl': ['3.5rem', { lineHeight: '1.1' }],      // ~57.75px
       },
       colors: {
         brand: {

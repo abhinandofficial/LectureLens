@@ -24,7 +24,7 @@ export const LandingPage: React.FC = () => {
   const { switchRole } = useApp();
 
   const handleLaunchApp = () => {
-    navigate('/app/dashboard');
+    navigate('/login');
   };
 
   const handleLaunchDemo = () => {
@@ -419,7 +419,7 @@ export const LandingPage: React.FC = () => {
           </p>
 
           <button
-            onClick={handleLaunchApp}
+            onClick={() => navigate('/login')}
             className="inline-flex items-center gap-2 bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-base px-8 py-4 rounded-2xl shadow-subtle hover:scale-105 active:scale-100 transition-all"
           >
             <span>Sign In to Access Dashboard</span>

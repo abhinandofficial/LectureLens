@@ -1,4 +1,4 @@
-import { Course, Concept, PrerequisiteEdge, Question, StudentMastery, RemediationBite, LectureSession, CohortAnalytics } from '../types';
+import { Course, Concept, PrerequisiteEdge, Question, StudentMastery, RemediationBite, LectureSession, CohortAnalytics, DoubtItem, SlideItem, FilteredVoiceChunk, MasterLectureNotes } from '../types';
 
 export const DEMO_COURSE: Course = {
   id: 'course-cs201',
@@ -431,7 +431,8 @@ export const DEMO_REMEDIATION_BITES: Record<string, RemediationBite> = {
     analogy: 'Imagine Russian nesting dolls (Matryoshka). Each doll opened contains a slightly smaller identical doll. The process only halts when you hit the solid baby doll inside (the base case). If a doll contained an identical-sized doll, you would open them forever.',
     memoryCue: {
       en: 'Every call must shrink the workload; without a solid base floor, the stack elevator falls through the basement.',
-      hi: 'Har recursive call ko problem choti karni hogi; bina solid Base Case ke, Call Stack overflow ho jayega.'
+      hi: 'Har recursive call ko problem choti karni hogi; bina solid Base Case ke, Call Stack overflow ho jayega.',
+      ml: 'ഓരോ റിക്കർസീവ് കോളും പ്രശ്നം ചുരുക്കണം; ബേസ് കേസ് (Base Case) ഇല്ലെങ്കിൽ കോൾ സ്റ്റാക്ക് ഓവർഫ്ലോ ഉണ്ടാകും.'
     },
     quickCheck: {
       question: 'Which of the following functions is guaranteed to cause infinite recursion when called with f(5)?',
@@ -452,7 +453,8 @@ export const DEMO_REMEDIATION_BITES: Record<string, RemediationBite> = {
     analogy: 'A sticky note with your friend\'s house address written on it is the pointer. If your friend moves out and the house is demolished (free), the note still exists in your hand, but knocking on the empty lot causes a disaster (dangling pointer).',
     memoryCue: {
       en: 'Pointers are house addresses, not houses. Freeing releases the lot, but leaves the address written on your note until you set it to NULL.',
-      hi: 'Pointer sirf ghar ka pata (address) hai, khud ghar nahi. Memory free karne par pata NULL set karna zaroori hai.'
+      hi: 'Pointer sirf ghar ka pata (address) hai, khud ghar nahi. Memory free karne par pata NULL set karna zaroori hai.',
+      ml: 'പോയിന്ററുകൾ വെറും മെമ്മറി വിലാസങ്ങൾ (RAM Addresses) മാത്രമാണ്. മെമ്മറി ഫ്രീ (free) ചെയ്ത ശേഷം പോയിന്റർ NULL ആക്കി മാറ്റണം.'
     },
     quickCheck: {
       question: 'If "int x = 10; int* ptr = &x;", what does "*ptr = 25;" do?',
@@ -473,7 +475,8 @@ export const DEMO_REMEDIATION_BITES: Record<string, RemediationBite> = {
     analogy: 'A balanced BST is a well-spread pyramid where you find any person in 4 questions. A degenerate BST is a single-file line of 100 people where you must inspect everyone one-by-one.',
     memoryCue: {
       en: 'Sorted inputs without self-balancing (AVL/Red-Black) stretch your binary search tree into a sluggish linked list.',
-      hi: 'Agar sorted data bina balance ke BST me daala, toh tree ban jaata hai ek lambi Linked List jisme O(N) lagta hai.'
+      hi: 'Agar sorted data bina balance ke BST me daala, toh tree ban jaata hai ek lambi Linked List jisme O(N) lagta hai.',
+      ml: 'അൺബാലൻസ്ഡ് ആയ ബൈനറി സെർച്ച് ട്രീയിലേക്ക് സോർട്ട് ചെയ്ത ഡാറ്റ നൽകിയാൽ അത് ലിങ്ക്ഡ് ലിസ്റ്റ് പോലെ സ്ലോ ആകും (O(N)).'
     },
     quickCheck: {
       question: 'What is the height of an un-balanced BST after inserting keys [10, 20, 30, 40, 50] sequentially?',
@@ -483,6 +486,51 @@ export const DEMO_REMEDIATION_BITES: Record<string, RemediationBite> = {
     }
   }
 };
+
+export const DEMO_DOUBTS: DoubtItem[] = [
+  {
+    id: 'd-1',
+    studentName: 'Aarav Sharma',
+    studentAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256',
+    question: 'Why does naive recursive Fibonacci take O(2^n) time when there are only n subproblems?',
+    conceptId: 'c-rec',
+    conceptName: 'Recursion & Recurrence Relations',
+    answerEn: 'Because naive recursion recomputes overlapping subproblems repeatedly without memoization. fib(5) computes fib(3) twice, fib(2) three times, and so forth, creating an exponentially branching call tree.',
+    answerHi: 'क्योंकि साधारण रिकर्शन बिना मेमोइज़ेशन के एक ही सब-प्रॉब्लम को बार-बार कैलकुलेट करता है, जिससे कॉल ट्री 2^n की तरह फैलता है।',
+    answerMl: 'കാരണം മെമ്മോയിസേഷൻ ഇല്ലാതെ സാധാരണ റിക്കർഷൻ ഒരേ സബ്-പ്രോബ്ലം വീണ്ടും വീണ്ടും കണക്കുകൂട്ടുന്നു. ഇത് ഒരു എക്സ്പോണൻഷ്യൽ കോൾ ട്രീ ഉണ്ടാക്കുന്നു.',
+    votes: 14,
+    createdAt: '2026-10-10T14:30:00.000Z',
+    status: 'answered'
+  },
+  {
+    id: 'd-2',
+    studentName: 'Diya Patel',
+    studentAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=256',
+    question: 'What is the exact difference between marking visited on enqueue vs dequeue in BFS?',
+    conceptId: 'c-graph',
+    conceptName: 'Graph Traversal (BFS & DFS)',
+    answerEn: 'Marking visited on enqueue guarantees each reachable vertex is placed in the queue at most once. If you wait until dequeue, multiple unvisited parents discovering the same neighbor will push duplicate entries into the queue.',
+    answerHi: 'Enqueue पर विज़िटेड मार्क करने से हर नोड कतार में केवल एक बार जाता है। Dequeue तक रुकने पर कई पड़ोसी एक ही नोड को बार-बार कतार में डाल देते हैं।',
+    answerMl: 'Enqueue ചെയ്യുമ്പോൾ വിസിറ്റഡ് ആക്കിയാൽ ഓരോ നോഡും കൃത്യമായി ഒരു തവണ മാത്രമേ ക്യൂവിൽ വരൂ. Dequeue ചെയ്യുന്നതുവരെ കാത്തിരുന്നാൽ ഒരേ നോഡ് പലതവണ ക്യൂവിൽ പ്രവേശിച്ച് മെമ്മറി നിറയും.',
+    votes: 21,
+    createdAt: '2026-10-10T16:10:00.000Z',
+    status: 'answered'
+  },
+  {
+    id: 'd-3',
+    studentName: 'Rohan Nair',
+    studentAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256',
+    question: 'Is a dangling pointer still pointing to valid memory after free()?',
+    conceptId: 'c-mem',
+    conceptName: 'Memory Addressing & Pointers',
+    answerEn: 'No. The pointer holds the old address, but that heap block has been marked free by the allocator and can be reallocated to another process. Dereferencing it is dangerous Undefined Behavior.',
+    answerHi: 'नहीं! वह पुराना एड्रेस होल्ड करता है, पर मेमोरी एलोकेटर को लौट चुकी है। उसे डीरेफरेंस करने से अनडिफाइंड बिहेवियर या क्रैश होता है।',
+    answerMl: 'ഇല്ല. പോയിന്റർ പഴയ അഡ്രസ്സ് നിലനിർത്തുന്നുണ്ടെങ്കിലും ആ മെമ്മറി ബ്ലോക്ക് അലോക്കേറ്റർക്ക് തിരികെ നൽകിക്കഴിഞ്ഞു. അത് റീഡ് ചെയ്യുന്നത് അപകടകരമായ അൺഡിഫൈൻഡ് ബിഹേവിയർ (Undefined Behavior) ആണ്.',
+    votes: 9,
+    createdAt: '2026-10-10T18:45:00.000Z',
+    status: 'answered'
+  }
+];
 
 export const DEMO_LECTURE: LectureSession = {
   id: 'lec-08',
@@ -575,3 +623,224 @@ export const DEMO_COHORT_ANALYTICS: CohortAnalytics = {
     transcriptCoveragePct: 78.5
   }
 };
+
+export const DEMO_SLIDES: SlideItem[] = [
+  {
+    slideNumber: 1,
+    title: '1. Graph Representations: Adjacency Matrix vs. Adjacency List',
+    bullets: [
+      'Graph G = (V, E) where V is vertices, E is edges',
+      'Adjacency Matrix: O(V²) memory space, O(1) edge lookup, inefficient for sparse graphs',
+      'Adjacency List: O(V + E) memory space, standard choice for real-world networks',
+      'Memory tradeoff: cache spatial locality vs sparse memory overhead'
+    ],
+    codeSnippet: `// Adjacency List Representation
+vector<vector<int>> adj(V);
+adj[u].push_back(v); // directed edge u -> v`,
+    notes: 'Emphasize that in practical web crawling or social graphs, V > 10^7, making matrix allocation O(V^2) catastrophic.'
+  },
+  {
+    slideNumber: 2,
+    title: '2. Breadth-First Search (BFS) & Frontier Traversal',
+    bullets: [
+      'Level-order exploration outward from source vertex s',
+      'Requires explicit FIFO Queue to track traversal frontier',
+      'Guarantees shortest path in unweighted graphs',
+      'Time Complexity: O(V + E), Space Complexity: O(V)'
+    ],
+    codeSnippet: `queue<int> q;
+q.push(startNode);
+visited[startNode] = true;`,
+    notes: 'Walk through tree vs graph difference: Graphs have cycles and alternate paths.'
+  },
+  {
+    slideNumber: 3,
+    title: '3. The Critical Visited Invariant: Preventing Queue Explosion',
+    bullets: [
+      'Invariant: A vertex MUST be marked visited when pushed (enqueued), NOT when popped',
+      'Delaying mark until dequeue causes duplicate enqueues from shared neighbors',
+      'Pathological duplicate growth: queue size expands exponentially up to O(E)',
+      'Common exam trap: "Memory Limit Exceeded" caused by late visited assignment'
+    ],
+    codeSnippet: `// CORRECT PATTERN:
+for (int neighbor : adj[curr]) {
+  if (!visited[neighbor]) {
+    visited[neighbor] = true; // <-- ENQUEUE TIME MARKING!
+    q.push(neighbor);
+  }
+}`,
+    notes: 'High-yield midterm concept. 65% of students fail this edge case.'
+  },
+  {
+    slideNumber: 4,
+    title: '4. Depth-First Search (DFS) & Activation Stack Frames',
+    bullets: [
+      'Backtracking traversal following a single branch to maximum depth',
+      'Uses the Call Stack or an explicit LIFO Stack',
+      'State colors: White (unvisited), Gray (on current path stack), Black (fully processed)',
+      'Stack overflow vulnerability on deep degenerate linear graphs (O(V) frames)'
+    ],
+    codeSnippet: `void dfs(int u, vector<bool>& vis) {
+  vis[u] = true;
+  for (int v : adj[u]) {
+    if (!vis[v]) dfs(v, vis);
+  }
+}`,
+    notes: 'Link back to Tier 0 Call Stacks so students connect memory frames to recursion depth.'
+  },
+  {
+    slideNumber: 5,
+    title: '5. Cycle Detection in Directed Graphs & DAGs',
+    bullets: [
+      'Directed Acyclic Graph (DAG): Directed graph with zero directed cycles',
+      'Cycle exists if and only if DFS encounters a "Back-Edge" to an active Gray ancestor node',
+      'Topological ordering is only mathematically possible if graph is a DAG',
+      'Kahn\'s In-degree Algorithm: iteratively peels nodes with in-degree = 0'
+    ],
+    codeSnippet: `if (inStack[v]) {
+  // Cycle detected! Graph cannot be top-sorted.
+  return true;
+}`,
+    notes: 'Sets up the prerequisite for Kahn\'s algorithm and syllabus topological validation.'
+  }
+];
+
+export const DEMO_FILTERED_VOICE_CHUNKS: FilteredVoiceChunk[] = [
+  {
+    id: 'fvc-1',
+    timestamp: '02:15',
+    slideIndex: 1,
+    rawSpeech: 'Okay, uhm, good morning everyone. So, like, today we are getting into Graph Representations. You know, when we look at an Adjacency Matrix, basically it allocates V squared space. If V is a million, uh, that is a terabyte of RAM, right?',
+    filteredSpeech: 'Graph representations: An Adjacency Matrix allocates O(V²) space. With one million vertices, matrix allocation requires terabytes of memory, rendering it unusable for sparse real-world graphs. Adjacency lists optimize this to O(V + E).',
+    fillerWordsRemoved: ['Okay', 'uhm', 'So', 'like', 'You know', 'basically', 'uh', 'right'],
+    category: 'core_concept',
+    slideAlignmentScore: 96
+  },
+  {
+    id: 'fvc-2',
+    timestamp: '09:40',
+    slideIndex: 2,
+    rawSpeech: 'Now, uh, moving to slide 2, BFS is like ripples in a pond when you drop a stone. Each ripple is a distance layer. Remember, you must use a FIFO queue here, not a stack.',
+    filteredSpeech: 'Analogy: Breadth-First Search operates like expanding ripples in water—each ripple represents a uniform distance layer from the origin. A FIFO queue enforces this level-order discipline.',
+    fillerWordsRemoved: ['Now', 'uh', 'like'],
+    category: 'analogy',
+    slideAlignmentScore: 92
+  },
+  {
+    id: 'fvc-3',
+    timestamp: '24:10',
+    slideIndex: 3,
+    rawSpeech: 'Listen up, this is super important, uhm, listen carefully. In BFS, when you discover a neighbor, mark it visited immediately! Like, if you wait until you pop it from the queue, two different neighbors will see it and push it twice. In dense graphs, your queue will literally explode with duplicates.',
+    filteredSpeech: 'Critical Invariant: In BFS, mark nodes as visited immediately upon enqueuing. Delaying until dequeue causes multiple ancestor nodes to push duplicate instances, resulting in exponential memory bloat and Memory Limit Exceeded errors.',
+    fillerWordsRemoved: ['Listen up', 'this is super important', 'uhm', 'listen carefully', 'Like', 'literally'],
+    category: 'pitfall_warning',
+    slideAlignmentScore: 98
+  },
+  {
+    id: 'fvc-4',
+    timestamp: '32:05',
+    slideIndex: 4,
+    rawSpeech: 'Okay guys, so for DFS, remember our previous lecture on Call Stacks? Each recursive DFS call pushes a new activation frame with return pointers. If the graph is a straight chain of 100,000 nodes, boom, stack overflow!',
+    filteredSpeech: 'Depth-First Search relies on the call stack. Recursive traversal pushes activation records per depth level. A degenerate path of 100,000 nodes exceeds typical operating system stack limits (~8MB), causing segmentation faults.',
+    fillerWordsRemoved: ['Okay guys', 'so', 'remember', 'boom'],
+    category: 'core_concept',
+    slideAlignmentScore: 94
+  },
+  {
+    id: 'fvc-5',
+    timestamp: '41:18',
+    slideIndex: 5,
+    rawSpeech: 'And finally, uh, on slide 5: Cycle detection. You cannot topologically sort a graph if it has cycles. If Kahn\'s algorithm finishes and the number of sorted nodes is less than V, you know there is a cycle deadlock.',
+    filteredSpeech: 'Cycle Invariant: Topological ordering requires a strict Directed Acyclic Graph (DAG). If Kahn\'s in-degree sorting finishes with fewer than V elements in the processed order, a cycle exists.',
+    fillerWordsRemoved: ['And finally', 'uh', 'you know'],
+    category: 'pitfall_warning',
+    slideAlignmentScore: 95
+  }
+];
+
+export const DEMO_MASTER_LECTURE_NOTES: MasterLectureNotes = {
+  id: 'mln-cs201-lec14',
+  lectureId: 'lec-14',
+  generatedAt: new Date().toISOString(),
+  overview: 'This lecture covered Graph Representations, Breadth-First Search (BFS) mechanics, the Enqueue-Time Visited Invariant, Depth-First Search (DFS) stack frames, and Directed Acyclic Graph (DAG) cycle detection using Kahn\'s algorithm. The synthesis combines source slides with transcribed teacher clarifications.',
+  slideAndSpeechAlignment: [
+    {
+      slideNumber: 1,
+      slideTitle: 'Graph Representations (Matrix vs List)',
+      slidePoints: [
+        'Adjacency Matrix requires O(V²) memory; fast O(1) edge check',
+        'Adjacency List requires O(V + E) memory; optimal for sparse graphs'
+      ],
+      teacherSpokenPoints: [
+        'Explained why V=1,000,000 leads to terabyte memory exhaustion on matrices',
+        'Recommends Adjacency List for 99% of competitive programming and web graphs'
+      ],
+      divergenceNotes: 'Teacher spent 6 minutes detailing hardware cache line misses during pointer chasing in adjacency list linked nodes.'
+    },
+    {
+      slideNumber: 2,
+      slideTitle: 'Breadth-First Search (BFS) Frontier',
+      slidePoints: [
+        'Level-order traversal using FIFO queue',
+        'Guaranteed shortest path on unweighted edges'
+      ],
+      teacherSpokenPoints: [
+        'Used ripple-in-pond mental model for uniform distance layers',
+        'Contrasted level-by-level queue expansion against DFS depth exploration'
+      ],
+      divergenceNotes: 'Emphasized why priority queues are NOT needed unless edge weights are non-uniform.'
+    },
+    {
+      slideNumber: 3,
+      slideTitle: 'The Enqueue-Time Visited Invariant',
+      slidePoints: [
+        'Must mark visited on queue push, NOT on queue pop',
+        'Prevents exponential queue memory blowup'
+      ],
+      teacherSpokenPoints: [
+        'Highlighted as the single most frequent midterm code deduction',
+        'Demonstrated how diamond graphs duplicate queue entries exponentially without enqueue-time marking'
+      ],
+      divergenceNotes: 'Teacher live-coded a counterexample on the chalkboard showing queue length reaching 24 on a 6-node graph.',
+      keyFormulasOrCode: 'visited[neighbor] = true; // MUST occur before q.push(neighbor)'
+    },
+    {
+      slideNumber: 4,
+      slideTitle: 'DFS & Activation Stack Frames',
+      slidePoints: [
+        'Backtracking depth exploration via recursion or LIFO stack',
+        'O(V) worst-case recursion call stack space'
+      ],
+      teacherSpokenPoints: [
+        'Directly connected recursion depth to Tier 0 Call Stack memory limits',
+        'Advised using explicit stack vector when graph depth exceeds 50,000'
+      ],
+      divergenceNotes: 'Referenced Linux 8MB default stack limit vs Windows 1MB thread stack limit.'
+    },
+    {
+      slideNumber: 5,
+      slideTitle: 'Cycle Detection & Kahn\'s Topological Sort',
+      slidePoints: [
+        'Directed Acyclic Graphs (DAG) contain zero cycles',
+        'Topological sort valid only when DAG property holds'
+      ],
+      teacherSpokenPoints: [
+        'Proved mathematically why in-degree queue processing fails on cycles',
+        'Showed how syllabus module prerequisites mirror Kahn\'s algorithm'
+      ],
+      divergenceNotes: 'Demonstrated how academic course catalogs reject circular prerequisite loops.'
+    }
+  ],
+  keyTakeaways: [
+    'Always use Adjacency Lists unless vertex count is extremely small (V < 500) and edge density is near 100%.',
+    'Mark BFS nodes visited when they enter the queue. Marking upon dequeue is a critical bug in cyclic graphs.',
+    'DFS call depth is constrained by OS stack frames; deep recursive trees risk stack overflow.',
+    'A cycle in a prerequisite graph causes Kahn\'s queue to terminate prematurely before processing all vertices.'
+  ],
+  detectedExamPitfalls: [
+    'Pitfall: Marking BFS visited on dequeue -> results in TLE/MLE due to redundant path queue pushes.',
+    'Pitfall: Assuming BST searches are always O(log N) -> without balancing, insertions degrade to O(N).',
+    'Pitfall: Omitting base case in DFS recursion -> triggers stack overflow activation frame exhaustion.'
+  ]
+};
+

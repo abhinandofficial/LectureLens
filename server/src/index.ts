@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '25mb' }));
 
 // Initialize Gemini Client
 const apiKey = process.env.GEMINI_API_KEY || '';
@@ -378,6 +378,215 @@ app.post('/api/catchup/generate', async (req, res) => {
   };
 
   res.json(notes);
+});
+
+// Server-Side Audio Transcription Endpoint (Multimodal Audio Fallback)
+app.post('/api/transcribe', async (req, res) => {
+  const { audioBase64, mimeType = 'audio/webm', language = 'en' } = req.body;
+  if (!audioBase64) {
+    return res.status(400).json({ error: 'audioBase64 payload required', text: '' });
+  }
+
+  if (geminiClient) {
+    try {
+      const model = geminiClient.getGenerativeModel({ model: MODEL_NAME });
+      const prompt = `Transcribe this spoken lecture audio directly into text in ${
+        language === 'hi' ? 'Hindi / Hinglish' : language === 'ml' ? 'Malayalam' : 'English'
+      }. Return ONLY the transcribed text, with no preamble, no markdown quotes, and no commentary. If silence or no clear speech is detected, return an empty string.`;
+
+      const cleanBase64 = audioBase64.replace(/^data:[^;]+;base64,/, '');
+      const result = await model.generateContent([
+        {
+          inlineData: {
+            mimeType: mimeType.split(';')[0] || 'audio/webm',
+            data: cleanBase64,
+          },
+        },
+        prompt,
+      ]);
+
+      const text = result.response.text().trim();
+      return res.json({ text, engine: 'gemini-stt' });
+    } catch (err: any) {
+      console.warn('Gemini audio transcription error:', err.message);
+    }
+  }
+
+  return res.json({
+    text: '',
+    engine: 'server-stt-unconfigured',
+    note: 'GEMINI_API_KEY not configured or audio transcription failed',
+  });
+});
+
+// Late Join Catch-Up Generator Endpoint with Gemini structured prompt
+app.post('/api/late-catchup/generate', async (req, res) => {
+  const { classCode, className, fromSeconds, toSeconds, transcriptDigest, missedSlides = [], teacherEmphasis = [], language = 'en' } = req.body;
+
+  if (geminiClient) {
+    try {
+      const model = geminiClient.getGenerativeModel({ model: MODEL_NAME });
+      const prompt = `You are the LectureLens Late-Join Catch-Up synthesis engine.
+A student joined class "${className}" (code: ${classCode}) late.
+Missed audio transcript digest:
+${transcriptDigest}
+
+Missed slide outlines:
+${JSON.stringify(missedSlides)}
+
+Teacher flagged points:
+${JSON.stringify(teacherEmphasis)}
+
+Synthesize a high-precision catch-up digest:
+1. ninetySecondBriefEn: Array of 4-6 concise, plain-English bullet points.
+2. ninetySecondBriefMl: Array of 4-6 concise Malayalam bullet points (in Malayalam script).
+3. teacherFlaggedImportant: Array of 2-4 key teacher emphasis points from the transcript.
+
+Respond strictly in valid JSON matching this schema:
+{
+  "ninetySecondBriefEn": ["string", "string"],
+  "ninetySecondBriefMl": ["string", "string"],
+  "teacherFlaggedImportant": ["string"]
+}`;
+
+      const result = await model.generateContent(prompt);
+      const text = result.response.text();
+      const match = text.match(/\{[\s\S]*\}/);
+      if (match) {
+        const parsed = JSON.parse(match[0]);
+        if (parsed.ninetySecondBriefEn && Array.isArray(parsed.ninetySecondBriefEn)) {
+          return res.json(parsed);
+        }
+      }
+    } catch (err: any) {
+      console.warn('Gemini Late-Join Catch-Up generation error:', err.message);
+    }
+  }
+
+  return res.status(503).json({
+    error: 'Gemini service unconfigured or generation failed',
+    fallbackAvailable: true,
+  });
+});
+
+// RecallQ Generator Endpoint with structured prompt & Gemini fallback
+app.post('/api/recallq/generate', async (req, res) => {
+  const { deckId, deckName, slidesSummary, slideCount = 5 } = req.body;
+
+  if (geminiClient) {
+    try {
+      const model = geminiClient.getGenerativeModel({ model: MODEL_NAME });
+      const prompt = `You are the RecallQ question generation engine for LectureLens.
+Based on the following lecture slide summary:
+${slidesSummary}
+
+Generate a practice test package with:
+1. 2 questions per slide/concept testing deep understanding and application (at least 1 scenario question).
+2. For each wrong option, provide a misconception object with:
+   - misconceptionId
+   - misconceptionLabel
+   - deconstructiveFeedbackEn ("You may have thought... because...")
+   - deconstructiveFeedbackMl (in Malayalam script)
+   - paradoxScenarioEn (2-4 sentences scenario where the flaw breaks)
+   - paradoxScenarioMl (in Malayalam script)
+   - rebuildGuidanceEn
+   - rebuildGuidanceMl
+3. 1 Remediation Bite per concept with:
+   - coreIntuitionEn (exactly 2 concise sentences)
+   - coreIntuitionMl
+   - analogyEn (high contrast real-world analogy)
+   - analogyMl
+   - dualLanguageAnchorEn (memory cue / rule of thumb)
+   - dualLanguageAnchorMl
+   - quickCheckPool: array of 3 conceptual quick-check questions (question, 4 options, correctIndex, hint)
+
+Respond ONLY with valid JSON matching this schema:
+{
+  "deckId": "${deckId}",
+  "deckName": "${deckName}",
+  "generatedAt": "${new Date().toISOString()}",
+  "isPublished": false,
+  "questions": [
+    {
+      "id": "string",
+      "deckId": "${deckId}",
+      "slideIndex": 0,
+      "slideTitle": "string",
+      "conceptId": "string",
+      "conceptName": "string",
+      "difficulty": "easy|medium|hard",
+      "isScenario": true|false,
+      "stem": "string",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "string",
+          "isCorrect": true
+        },
+        {
+          "id": "opt-b",
+          "text": "string",
+          "isCorrect": false,
+          "misconception": {
+            "misconceptionId": "string",
+            "misconceptionLabel": "string",
+            "deconstructiveFeedbackEn": "string",
+            "deconstructiveFeedbackMl": "string",
+            "paradoxScenarioEn": "string",
+            "paradoxScenarioMl": "string",
+            "rebuildGuidanceEn": "string",
+            "rebuildGuidanceMl": "string"
+          }
+        }
+      ],
+      "correctOptionId": "opt-a",
+      "explanation": "string",
+      "status": "pending_review"
+    }
+  ],
+  "remediationBites": [
+    {
+      "id": "string",
+      "conceptId": "string",
+      "conceptName": "string",
+      "coreIntuitionEn": "string",
+      "coreIntuitionMl": "string",
+      "analogyEn": "string",
+      "analogyMl": "string",
+      "dualLanguageAnchorEn": "string",
+      "dualLanguageAnchorMl": "string",
+      "quickCheckPool": [
+        {
+          "id": "string",
+          "question": "string",
+          "options": ["string", "string", "string", "string"],
+          "correctIndex": 0,
+          "hint": "string"
+        }
+      ],
+      "status": "pending_review"
+    }
+  ]
+}`;
+
+      const result = await model.generateContent(prompt);
+      const text = result.response.text();
+      const match = text.match(/\{[\s\S]*\}/);
+      if (match) {
+        const parsed = JSON.parse(match[0]);
+        if (parsed.questions && Array.isArray(parsed.questions) && parsed.questions.length > 0) {
+          return res.json(parsed);
+        }
+      }
+    } catch (err: any) {
+      console.warn('Gemini RecallQ generation error, delegating to client engine:', err.message);
+    }
+  }
+
+  return res.status(503).json({
+    error: 'Gemini service unconfigured or generation failed',
+    fallbackAvailable: true,
+  });
 });
 
 app.listen(PORT, () => {

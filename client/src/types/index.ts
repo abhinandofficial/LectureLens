@@ -1,4 +1,5 @@
 export type UserRole = 'student' | 'teacher';
+export type AppLanguage = 'en' | 'hi' | 'ml';
 
 export interface User {
   id: string;
@@ -42,6 +43,8 @@ export interface PrerequisiteEdge {
 export interface MCQOption {
   id: string;
   text: string;
+  textHi?: string;
+  textMl?: string;
   isCorrect: boolean;
   misconceptionTag?: string;
   trapReasoning?: string;
@@ -51,10 +54,14 @@ export interface Question {
   id: string;
   conceptId: string;
   text: string;
+  textHi?: string;
+  textMl?: string;
   options: MCQOption[];
   difficulty: 'foundational' | 'applied';
   forwardDependentConceptId?: string; // For testing retention in downstream contexts
   explanationSnippet?: string;
+  explanationSnippetHi?: string;
+  explanationSnippetMl?: string;
 }
 
 export interface StudentMastery {
@@ -69,7 +76,7 @@ export interface StudentMastery {
 export interface MentalMirrorFeedback {
   questionId: string;
   optionId: string;
-  language: 'en' | 'hi';
+  language: AppLanguage;
   trapReasoning: string;
   counterexample: string;
   paradoxScenario: string;
@@ -85,6 +92,7 @@ export interface RemediationBite {
   memoryCue: {
     en: string;
     hi: string;
+    ml: string;
   };
   quickCheck: {
     question: string;
@@ -92,6 +100,21 @@ export interface RemediationBite {
     correctIndex: number;
     explanation: string;
   };
+}
+
+export interface DoubtItem {
+  id: string;
+  studentName: string;
+  studentAvatar: string;
+  question: string;
+  conceptId: string;
+  conceptName: string;
+  answerEn: string;
+  answerHi: string;
+  answerMl: string;
+  votes: number;
+  createdAt: string;
+  status: 'answered' | 'open';
 }
 
 export interface LectureSession {
@@ -116,7 +139,7 @@ export interface CatchUpNotes {
   id: string;
   lectureId: string;
   userId: string;
-  language: 'en' | 'hi';
+  language: AppLanguage;
   whatYouMissed: string;
   sections: CatchUpNoteSection[];
   recoveryQuickCheck: {
@@ -153,3 +176,72 @@ export interface CohortAnalytics {
     transcriptCoveragePct: number;
   };
 }
+
+export interface SlideItem {
+  slideNumber: number;
+  title: string;
+  bullets: string[];
+  codeSnippet?: string;
+  notes?: string;
+}
+
+export interface FilteredVoiceChunk {
+  id: string;
+  timestamp: string; // e.g. "04:15"
+  slideIndex: number;
+  rawSpeech: string;
+  filteredSpeech: string;
+  fillerWordsRemoved: string[];
+  category: 'core_concept' | 'analogy' | 'pitfall_warning' | 'administrative' | 'off_slide';
+  slideAlignmentScore: number; // 0 - 100
+  isDemo?: boolean;
+}
+
+export interface MasterLectureNotes {
+  id: string;
+  lectureId: string;
+  generatedAt: string;
+  overview: string;
+  slideAndSpeechAlignment: {
+    slideNumber: number;
+    slideTitle: string;
+    slidePoints: string[];
+    teacherSpokenPoints: string[];
+    divergenceNotes: string;
+    keyFormulasOrCode?: string;
+  }[];
+  keyTakeaways: string[];
+  detectedExamPitfalls: string[];
+}
+
+export interface LateArrivalCatchUp {
+  studentId: string;
+  arrivalTimeMinutes: number;
+  currentLectureTimeMinutes: number;
+  missedSlides: number[];
+  executiveBriefing: string;
+  personalizedPrerequisiteGap: {
+    conceptId: string;
+    conceptName: string;
+    masteryScore: number;
+    warning: string;
+  }[];
+  actionableNextStep: string;
+}
+
+export type RecordingStatus = 'idle' | 'requesting_permission' | 'recording' | 'paused' | 'stopped' | 'error';
+
+export interface LiveLectureSessionState {
+  isActive: boolean;
+  recordingStatus: RecordingStatus;
+  recordingError?: string;
+  elapsedSeconds: number;
+  startedAt: string | null;
+  currentSlideIndex: number;
+  slides: SlideItem[];
+  filteredChunks: FilteredVoiceChunk[];
+  activeSpeaker: string;
+  masterNotes: MasterLectureNotes | null;
+}
+
+
